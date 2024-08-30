@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:paty_cosmeticos/shared/widgets/bottom_navigation.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class ReportsScreen extends StatelessWidget {
+  const ReportsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resumen'),
+        title: const Text('Resumen'),
       ),
-      body: Center(
-        child: Text('Bienvenido a la pantalla de inicio'),
+      body: const Center(
+        child: Text('Bienvenido a la pantalla de reportes'),
       ),
     );
   }
