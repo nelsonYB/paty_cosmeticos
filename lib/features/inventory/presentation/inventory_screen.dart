@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:paty_cosmeticos/shared/widgets/bottom_navigation.dart';
 
-class InventoryScreen extends StatelessWidget {
-  const InventoryScreen({Key? key}) : super(key: key);
+class InventoryScreen extends StatefulWidget {
+  const InventoryScreen({super.key});
+
+  @override
+  State<InventoryScreen> createState() => _InventoryScreenState();
+}
+
+class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  String _searchQuery = '';
+  String _selectedCategory = 'Todas';
+  List<String> _categories = ['Todas', 'Shampoo', 'Acondicionador', 'Mascarilla', 'Tinte', 'Otros'];
+  
 
   @override
   Widget build(BuildContext context) {
