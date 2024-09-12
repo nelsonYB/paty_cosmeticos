@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:paty_cosmeticos/config/app_scaffold.dart';
 import 'package:paty_cosmeticos/features/clients/presentation/clients_screen.dart';
 import 'package:paty_cosmeticos/features/home/presentation/home_screen.dart';
-import 'package:paty_cosmeticos/features/inventory/presentation/inventory_screen.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/screens/inventory_screen.dart';
 import 'package:paty_cosmeticos/features/reports/presentation/reports_screen.dart';
 import 'package:paty_cosmeticos/features/settings/presentation/settings_screen.dart';
 

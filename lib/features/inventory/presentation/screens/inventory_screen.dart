@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/widgets/movements_tab.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/widgets/products_tab.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/widgets/suppliers_tab.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -9,9 +12,7 @@ class InventoryScreen extends StatefulWidget {
 
 class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String _searchQuery = '';
-  String _selectedCategory = 'Todas';
-  List<String> _categories = ['Todas', 'Shampoo', 'Acondicionador', 'Mascarilla', 'Tinte', 'Otros'];
+  
 
   @override
   void initState() {
@@ -39,6 +40,21 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
           ],
         ),
       ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          ProductsTab(),
+          SuppliersTab(),
+          MovementsTab(),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          //TODO: Implementar creación de producto o proveedor
+        },
+      ),
     );
   }
+
 }
