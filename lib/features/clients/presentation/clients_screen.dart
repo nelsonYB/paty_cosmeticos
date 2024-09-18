@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:paty_cosmeticos/shared/widgets/bottom_navigation.dart';
 
 class ClientsScreen extends StatelessWidget {
   const ClientsScreen({Key? key}) : super(key: key);

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:paty_cosmeticos/features/inventory/domain/entities/product.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/widgets/movements_tab.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/widgets/products_tab.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/widgets/suppliers_tab.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../data/inventory_repository_impl.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -51,10 +56,13 @@ class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProv
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          //TODO: Implementar creación de producto o proveedor
+          context.push('/inventory/add-product');
         },
       ),
     );
   }
 
+
 }
+
+
