@@ -9,7 +9,7 @@ class InventoryRepositoryImpl {
 
   InventoryRepositoryImpl(this._supabaseClient);
 
-  /*Future<List<Product>> getProducts() async {
+  Future<List<Product>> getProducts() async {
     try {
       final data = await _supabaseClient.from('products').select();
 
@@ -17,7 +17,7 @@ class InventoryRepositoryImpl {
     } catch (e) {
       throw Exception('Error getting products: $e');
     }
-  }*/
+  }
 
   Future<void> createProduct(Product product) async {
 

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:paty_cosmeticos/features/inventory/domain/entities/product.dart';
 
 class ProductItem extends StatelessWidget {
-  final int index; 
+  final Product product; 
 
-  const ProductItem({super.key, required this.index});
+  const ProductItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Producto ${index + 1}'),
-      subtitle: Text('Cantidad: 100 | Precio: \$${(index + 1) * 10}.99'),
+      title: Text(product.name),
+      subtitle: Text('Stock: ${product.stock} | Precio: \$${product.sellingPrice}'),
       trailing: IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {

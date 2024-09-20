@@ -18,6 +18,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   double purchasePrice = 0;
   double sellingPrice = 0;
   int stock = 0;
+  String _selectedCategory = '';
+  TextEditingController _newCategoryController = TextEditingController();
+
+  final List<String> _categories = ['Shampoo', 'Acondicionador', 'Mascarilla', 'Tinte', 'Otros'];
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,34 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           key: _formKey,
           child: Column(
             children: [
+              // DropdownButtonFormField para seleccionar una categoría
+              DropdownButtonFormField<String>(
+                value: _selectedCategory.isEmpty ? null : _selectedCategory,
+                hint: const Text('Selecciona una Categoría'),
+                items: _categories.map((category) {
+                  return DropdownMenuItem(
+                    value: category,
+                    child: Text(category),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value!;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty && _newCategoryController.text.isEmpty) {
+                    return 'Por favor, selecciona o ingresa una categoría';
+                  }
+                  return null;
+                },
+              ),
+              // TextFormField para agregar una nueva categoría
+              TextField(
+                controller: _newCategoryController,
+                decoration: const InputDecoration(labelText: 'Agregar nueva categoría (opcional)'),
+              ),
+              //Formulario para agregar un nuevo producto
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Nombre del Producto'),
                 validator: (value) {
@@ -85,12 +117,19 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   void _saveProduct() async {
     if (_formKey.currentState?.validate() == true) {
       _formKey.currentState?.save();
+      //Verificar si se ingresó una nueva categoría o se seleccionó una existente
+      final category = _newCategoryController.text.isNotEmpty
+         ? _newCategoryController.text 
+         : _selectedCategory;
+
+
       final product = Product(
         name: name,
         description: description,
         purchasePrice: purchasePrice,
         sellingPrice: sellingPrice,
         stock: stock,
+        category: category,
       );
       
       try {
