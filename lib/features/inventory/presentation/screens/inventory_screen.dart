@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:paty_cosmeticos/features/inventory/domain/entities/product.dart';
-import 'package:paty_cosmeticos/features/inventory/presentation/widgets/movements_tab.dart';
-import 'package:paty_cosmeticos/features/inventory/presentation/widgets/products_tab.dart';
-import 'package:paty_cosmeticos/features/inventory/presentation/widgets/suppliers_tab.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/widgets/movements/movements_tab.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/widgets/products/products_tab.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/widgets/suppliers/suppliers_tab.dart';
 
-import '../../data/inventory_repository_impl.dart';
 
-class InventoryScreen extends StatefulWidget {
+class InventoryScreen extends ConsumerStatefulWidget {
   const InventoryScreen({super.key});
 
   @override
-  State<InventoryScreen> createState() => _InventoryScreenState();
+  ConsumerState<InventoryScreen> createState() => _InventoryScreenState();
 }
 
-class _InventoryScreenState extends State<InventoryScreen> with SingleTickerProviderStateMixin {
+class _InventoryScreenState extends ConsumerState<InventoryScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   
 

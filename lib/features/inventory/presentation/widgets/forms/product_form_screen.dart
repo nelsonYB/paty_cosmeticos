@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:paty_cosmeticos/features/inventory/domain/entities/product.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../data/inventory_repository_impl.dart';
+import 'package:paty_cosmeticos/features/inventory/presentation/providers/inventory_providers.dart';
 
-class ProductFormScreen extends StatefulWidget {
+
+class ProductFormScreen extends ConsumerStatefulWidget {
   const ProductFormScreen({super.key});
 
   @override
-  State<ProductFormScreen> createState() => _ProductFormScreenState();
+  ConsumerState<ProductFormScreen> createState() => _ProductFormScreenState();
 }
 
-class _ProductFormScreenState extends State<ProductFormScreen> {
+class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   final _formKey = GlobalKey<FormState>();
   String name = '';
   String description = '';
@@ -21,10 +22,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   String _selectedCategory = '';
   TextEditingController _newCategoryController = TextEditingController();
 
-  final List<String> _categories = ['Shampoo', 'Acondicionador', 'Mascarilla', 'Tinte', 'Otros'];
 
   @override
   Widget build(BuildContext context) {
+    final categoriesAsync = ref.watch(categoriesProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Agregar Producto'),
@@ -35,29 +37,39 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           key: _formKey,
           child: Column(
             children: [
-              // DropdownButtonFormField para seleccionar una categoría
-              DropdownButtonFormField<String>(
-                value: _selectedCategory.isEmpty ? null : _selectedCategory,
-                hint: const Text('Selecciona una Categoría'),
-                items: _categories.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category),
+              // Dropdown de categorías dinámicas
+              categoriesAsync.when(
+                data: (categories) {
+                  final allCategories = categories;
+
+                  return DropdownButtonFormField<String>(
+                    value: _selectedCategory.isEmpty ? null : _selectedCategory,
+                    hint: const Text('Seleccionar una Categoría'),
+                    items: allCategories.map((category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategory = value!;
+                      });
+                    },
+                    validator: (value) {
+                      // Validar que se haya seleccionado una categoría existente o ingresado una nueva
+                      if ((value == null || value.isEmpty) && _newCategoryController.text.isEmpty) {
+                        return 'Por favor, seleccione una categoría o ingrese una nueva';
+                      }
+                      return null;
+                    },
                   );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value!;
-                  });
                 },
-                validator: (value) {
-                  if (value == null || value.isEmpty && _newCategoryController.text.isEmpty) {
-                    return 'Por favor, selecciona o ingresa una categoría';
-                  }
-                  return null;
-                },
+                loading: () => const CircularProgressIndicator(),
+                error: (error, stack) => Text('Error al cargar categorías: $error'),
               ),
-              // TextFormField para agregar una nueva categoría
+              
+              // Campo para agregar una nueva categoría
               TextField(
                 controller: _newCategoryController,
                 decoration: const InputDecoration(labelText: 'Agregar nueva categoría (opcional)'),
@@ -119,10 +131,10 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       _formKey.currentState?.save();
       //Verificar si se ingresó una nueva categoría o se seleccionó una existente
       final category = _newCategoryController.text.isNotEmpty
-         ? _newCategoryController.text 
-         : _selectedCategory;
+         ? _newCategoryController.text //Si se ingresó una nueva categoría
+         : _selectedCategory; //Si se seleccionó una categoría existente
 
-
+      //Crear una instancia del producto
       final product = Product(
         name: name,
         description: description,
@@ -133,15 +145,23 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       );
       
       try {
-        await InventoryRepositoryImpl(Supabase.instance.client).createProduct(product);
+        //Uso del provider para crear un nuevo producto
+        await ref.read(inventoryRepositoryProvider).createProduct(product);
+
+        //Refrescar la lista de productos
+        ref.invalidate(productsProvider);
+
+        //Mostrar mensaje de éxito
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Producto creado correctamente'),
             backgroundColor: Colors.green,
           ),
         );
+        //Navegar a la pantalla de inventario
         context.pop();
       } catch (e) {
+        //Mostrar mensaje de error
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error al crear producto: $e'),
