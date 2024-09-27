@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/widgets/movements/movements_tab.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/widgets/products/products_tab.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/widgets/suppliers/suppliers_tab.dart';
@@ -50,12 +49,6 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> with SingleTi
           SuppliersTab(),
           MovementsTab(),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          context.push('/inventory/add-product');
-        },
       ),
     );
   }

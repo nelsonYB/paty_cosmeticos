@@ -10,7 +10,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(product.name),
-      subtitle: Text('Stock: ${product.stock} | Precio: \$${product.sellingPrice}'),
+      subtitle: Text('Stock: ${product.stock} | Precio Venta: \$${product.sellingPrice}'),
       trailing: IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {
