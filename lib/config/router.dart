@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:paty_cosmeticos/config/app_scaffold.dart';
+import 'package:paty_cosmeticos/features/auth/presentation/register_screen.dart';
 import 'package:paty_cosmeticos/features/clients/presentation/clients_screen.dart';
 import 'package:paty_cosmeticos/features/home/presentation/home_screen.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/screens/inventory_screen.dart';
@@ -15,6 +16,10 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
       path: '/home',

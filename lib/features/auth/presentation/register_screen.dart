@@ -2,32 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<void> _login() async {
+  Future<void> _register() async {
     final supabase = Supabase.instance.client;
 
     try {
-      await supabase.auth.signInWithPassword(
+      await supabase.auth.signUp(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      context.go('/home');
+      context.go('/');
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error')),
       );
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +40,8 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Bienvenido/a',
+            const Text(
+              'Crea tu cuenta',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -71,23 +72,21 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _login,
+              onPressed: _register,
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                backgroundColor: Colors.blue.shade100,
+                backgroundColor: Colors.blueGrey,
               ),
-              child: const Text('Iniciar sesión', style: TextStyle(fontSize: 18)),
+              child: const Text('Registrarse', style: TextStyle(fontSize: 18)),
             ),
             const SizedBox(height: 10),
             TextButton(
-              onPressed: () {
-                context.go('/register');
-              }, 
-              child: const Text('¿No tienes cuenta? Regístrate', style: TextStyle(color: Colors.blueGrey)),
-            )
+              onPressed: () => context.go('/'),
+              child: const Text('¿Ya tienes una cuenta? Inicia sesión', style: TextStyle(color: Colors.blueGrey)),
+            ),
           ],
         ),
       ),

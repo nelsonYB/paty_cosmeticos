@@ -17,11 +17,25 @@ final inventoryRepositoryProvider = Provider<InventoryRepository>((ref) {
 // Proveedor de productos
 final productsProvider = FutureProvider<List<Product>>((ref) async{
   final repository = ref.read(inventoryRepositoryProvider);
-  return repository.getProducts();
+
+  // Obtener el id del usuario actual
+  final user = ref.read(supabaseClientProvider).auth.currentUser;
+  if (user == null) {
+    throw Exception('Usuario no autenticado');
+  }
+
+  return repository.getProducts(user.id);
 });
 
 // Proveedor de categorías
 final categoriesProvider = FutureProvider<List<String>>((ref) async{
   final repository = ref.read(inventoryRepositoryProvider);
-  return repository.getCategories();
+
+  // Obtener el id del usuario actual
+  final user = ref.read(supabaseClientProvider).auth.currentUser;
+
+  if (user == null) {
+    throw Exception('Usuario no autenticado');
+  }
+  return repository.getCategories(user.id);
 });

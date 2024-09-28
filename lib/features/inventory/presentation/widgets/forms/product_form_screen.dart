@@ -20,7 +20,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
   double sellingPrice = 0;
   int stock = 0;
   String _selectedCategory = '';
-  TextEditingController _newCategoryController = TextEditingController();
+  TextEditingController newCategoryController = TextEditingController();
 
 
   @override
@@ -58,7 +58,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                     },
                     validator: (value) {
                       // Validar que se haya seleccionado una categoría existente o ingresado una nueva
-                      if ((value == null || value.isEmpty) && _newCategoryController.text.isEmpty) {
+                      if ((value == null || value.isEmpty) && newCategoryController.text.isEmpty) {
                         return 'Por favor, seleccione una categoría o ingrese una nueva';
                       }
                       return null;
@@ -71,7 +71,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
               
               // Campo para agregar una nueva categoría
               TextField(
-                controller: _newCategoryController,
+                controller: newCategoryController,
                 decoration: const InputDecoration(labelText: 'Agregar nueva categoría (opcional)'),
               ),
               //Formulario para agregar un nuevo producto
@@ -115,9 +115,25 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _saveProduct,
-                child: const Text('Guardar Producto'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Acción para el botón de cancelar
+                      context.pop();
+                    }, 
+                    child: const Text('Cancelar'),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton(
+                    onPressed: _saveProduct,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.green.shade200),
+                    ),
+                    child: const Text('Guardar Producto'),
+                  ),
+                ],
               ),
             ],
           ),
@@ -130,9 +146,16 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
     if (_formKey.currentState?.validate() == true) {
       _formKey.currentState?.save();
       //Verificar si se ingresó una nueva categoría o se seleccionó una existente
-      final category = _newCategoryController.text.isNotEmpty
-         ? _newCategoryController.text //Si se ingresó una nueva categoría
+      final category = newCategoryController.text.isNotEmpty
+         ? newCategoryController.text //Si se ingresó una nueva categoría
          : _selectedCategory; //Si se seleccionó una categoría existente
+
+      final user = ref.read(supabaseClientProvider).auth.currentUser;
+
+      if (user == null) {
+        context.go('/login');
+        return;
+      }
 
       //Crear una instancia del producto
       final product = Product(
@@ -142,6 +165,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
         sellingPrice: sellingPrice,
         stock: stock,
         category: category,
+        userId: user.id,
       );
       
       try {
