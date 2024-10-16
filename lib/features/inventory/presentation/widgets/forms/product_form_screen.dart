@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:paty_cosmeticos/features/inventory/domain/entities/product.dart';
 import 'package:paty_cosmeticos/features/inventory/presentation/providers/inventory_providers.dart';
 
@@ -120,7 +121,7 @@ class _ProductFormScreenState extends ConsumerState<ProductFormScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Acción para el botón de cancelar
+                      // Cerrar el formulario al presionar el botón de cancelar
                       context.pop();
                     }, 
                     child: const Text('Cancelar'),

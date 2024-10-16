@@ -1,4 +1,5 @@
 class Product {
+  final int? id; // El id es opcional
   final String name;
   final String description;
   final double purchasePrice;
@@ -8,6 +9,7 @@ class Product {
   final String userId;
 
   Product({ 
+    this.id,
     required this.name, 
     required this.description, 
     required this.purchasePrice, 
@@ -18,6 +20,7 @@ class Product {
   });
   
   Map<String, dynamic> toJson() => {
+    'id': id,
     'name': name,
     'description': description,
     'purchase_price': purchasePrice,
@@ -28,7 +31,9 @@ class Product {
   };
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
+    return Product( 
+      //Se asgina el id si está disponible
+      id: json['id'],
       name: json['name'],
       description: json['description'],
       purchasePrice: json['purchase_price'],

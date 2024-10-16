@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,16 +14,43 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
 
   Future<void> _register() async {
     final supabase = Supabase.instance.client;
 
     try {
-      await supabase.auth.signUp(
+      // Verificar si el nombre de usuario ya existe
+      final userCheck = await supabase
+          .from('profiles')
+          .select()
+          .eq('username', _usernameController.text)
+          .maybeSingle();
+
+      if (userCheck != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('El nombre de usuario ya existe')),
+        );
+        return;
+      }
+
+      // Crear una nueva cuenta
+      final response = await supabase.auth.signUp(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      context.go('/');
+
+      if (response.user != null) {
+        // Guardar el nombre del usuario en tabla profiles
+        await supabase.from('profiles').insert({
+          'user_id': response.user!.id, // Asocia el id del usuario
+          'username': _usernameController.text,
+        });
+
+
+        context.go('/'); // Redirigir a la pantalla de inicio
+      }
+
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error')),
@@ -50,6 +79,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(
+                labelText: 'Nombre de usuario',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             TextField(
               controller: _emailController,
               decoration: InputDecoration(

@@ -6,7 +6,8 @@ class AppScaffold extends StatelessWidget {
   final Widget child;
   final int selectedIndex;
 
-  AppScaffold({
+  const AppScaffold({
+    super.key, 
     required this.child,
     required this.selectedIndex,
   });

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/repositories/inventory_repository.dart';
@@ -36,7 +34,6 @@ class SupabaseInventoryRepositoryImpl implements InventoryRepository {
 
   }
 
-  //Todo: Implement the remaining methods
 
   @override
   Future<List<String>> getCategories(String userId) async {

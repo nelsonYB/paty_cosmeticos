@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:paty_cosmeticos/features/inventory/domain/entities/product.dart';
 
 class ProductItem extends StatelessWidget {
@@ -14,7 +15,15 @@ class ProductItem extends StatelessWidget {
       trailing: IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {
-          //TODO: Implementar edición de producto
+          if (product.id != null) {
+            final url = '/inventory/edit-product/${product.id}';
+            GoRouter.of(context).go(url);
+          } else {
+            // Manejar el caso donde el id es null, por ejemplo, mostrar un mensaje de error
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('El ID del producto no es válido'))
+            );
+          }
         }
       ),
     );
